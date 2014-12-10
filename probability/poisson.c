@@ -4,6 +4,35 @@
 #include <math.h>
 
 #include "poisson.h"
+#include "distribution.h"
+
+static double exp_value(int i, double lambda);
+
+struct dist *create_pois(double *lambda)
+{
+	struct dist *pois = malloc(sizeof(struct dist));
+	pois->param = lambda;
+	pois->dist_type = "poisson";
+	pois->add_segment = add_segment_pois;
+
+	return pois;
+}
+
+void add_segment_pois(double *distri_value, void *param,
+		      struct seginfo *seginfo)
+{
+	double *lambda = (double *)param;
+
+	int nth = seginfo->nth;
+
+	if (nth == 0)
+		distri_value[nth] = 1 / exp(*lambda);
+	else
+		distri_value[nth] = distri_value[nth - 1] + 
+			exp_value(nth, *lambda);
+	seginfo->m = distri_value[nth];
+	++seginfo->nth;
+}
 
 static double exp_value(int i, double lambda)
 {

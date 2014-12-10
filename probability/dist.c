@@ -3,7 +3,7 @@
 
 #include "distribution.h"
 #include "binomial.h"
-//#include "poisson.h"
+#include "poisson.h"
 #include "print.h"
 
 #define N 100000
@@ -21,13 +21,15 @@ int main()
 	bino_args->n = num;
 	bino_args->p = p;
 
-	char *dist_type = "bino";
-	struct dist *dist_bino = create_bino(dist_type, bino_args);
+	struct dist *dist_bino = create_bino(bino_args);
 	gener_distri(bino, N, dist_bino);
 //	printArray(bino, num);
 
-//	gener_distri(pois, N, dist_pois);
-//	printArray(pois, num);
+	struct dist *dist_pois = create_pois(&lambda);
+	gener_distri(pois, N, dist_pois);
+	printArray(bino, dist_bino->seginfo.nth);
+	printf("-----------------\n");
+	printArray(pois, dist_pois->seginfo.nth);
 
 	return 0;
 }

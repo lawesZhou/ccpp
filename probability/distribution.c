@@ -52,13 +52,11 @@ void gener_distri(int *distri, int N, struct dist *dist)
 			add_segment(&distri_value, dist, randnum);
 		}
 		val = binsearch(distri_value, randnum, seginfo->nth);
-		printf("\nrandnum = %lf, val = %d, nth = %d, m = %lf\n", randnum,
-		       val, seginfo->nth, seginfo->m);
-		printArray(distri_value, seginfo->nth);
+		//printf("\nrandnum = %lf, val = %d, nth = %d, m = %lf\n", randnum, val, seginfo->nth, seginfo->m);
 
 		++distri[val];
-//		break;
 	}
+	printArray(distri_value, seginfo->nth);
 
 	free(distri_value);
 }

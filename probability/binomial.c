@@ -9,14 +9,14 @@
 
 static double combin_num(int n, int i);
 
-struct dist *create_bino(char *dist_type, struct BinoArgs *param)
+struct dist *create_bino(struct BinoArgs *param)
 {
 	struct dist *args = (struct dist *)malloc(sizeof(struct dist));
-	args->dist_type = dist_type;
+	args->dist_type = "binomial";
 	args->param = param;
 
-	(args->seginfo).m = 0;//if need to initiate
-	(args->seginfo).nth = 0;
+	args->seginfo.m = 0;//if need to initiate
+	args->seginfo.nth = 0;
 
 	args->add_segment = add_segment_bino;
 
@@ -32,13 +32,13 @@ void add_segment_bino(double *distri_value,
 	int nth = seginfo->nth;
 	
 	if (nth == 0)
-		distri_value[nth] = pow(p, n);
+		distri_value[nth] = pow((1 - p), n);
 	else
 		distri_value[nth] = distri_value[nth - 1] + combin_num(n, nth)  
 			            * pow(p, nth) * pow((1 - p), n - nth);
-	printf("%lf\n", combin_num(n, nth)  
-		* pow(p, nth) * pow((1 - p), n - nth));
-	seginfo->m = distri_value[seginfo->nth];
+//	printf("%lf\n", combin_num(n, nth)  
+//		* pow(p, nth) * pow((1 - p), n - nth));
+	seginfo->m = distri_value[nth];
 	++seginfo->nth;
 }
 

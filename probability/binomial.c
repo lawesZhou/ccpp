@@ -4,7 +4,43 @@
 #include <math.h>
 #include <string.h>
 
+#include "distribution.h"
 #include "binomial.h"
+
+static double combin_num(int n, int i);
+
+struct dist *create_bino(char *dist_type, struct BinoArgs *param)
+{
+	struct dist *args = (struct dist *)malloc(sizeof(struct dist));
+	args->dist_type = dist_type;
+	args->param = param;
+
+	(args->seginfo).m = 0;//if need to initiate
+	(args->seginfo).nth = 0;
+
+	args->add_segment = add_segment_bino;
+
+	return args;
+}
+
+void add_segment_bino(double *distri_value, 
+		      void *param, struct seginfo *seginfo)
+{
+	struct BinoArgs *args = (struct BinoArgs *)param;
+	int n = args->n;
+	double p = args->p;
+	int nth = seginfo->nth;
+	
+	if (nth == 0)
+		distri_value[nth] = pow(p, n);
+	else
+		distri_value[nth] = distri_value[nth - 1] + combin_num(n, nth)  
+			            * pow(p, nth) * pow((1 - p), n - nth);
+	printf("%lf\n", combin_num(n, nth)  
+		* pow(p, nth) * pow((1 - p), n - nth));
+	seginfo->m = distri_value[seginfo->nth];
+	++seginfo->nth;
+}
 
 static double combin_num(int n, int i)
 {
@@ -20,7 +56,7 @@ static double combin_num(int n, int i)
 	for (; i > 0; --i, --n) 
 		cn *= (double)n / i;
 
-	printf("%lf\n", cn);
+//	printf("%lf\n", cn);
 	return cn;
 }
 

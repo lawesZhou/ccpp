@@ -1,11 +1,15 @@
 #ifndef BINOMIAL_H
 #define BINOMIAL_H
 
-struct BinoArgs{
+#include "distribution.h"
+
+struct BinoArgs {
 	int n;
 	double p;
 };
 
-double *bino_value(int *n, void *param);
+struct dist *create_bino(char *dist_type, struct BinoArgs *param);
 
+void add_segment_bino(double *distri_value, 
+		      void *param, struct seginfo *seginfo);
 #endif

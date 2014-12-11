@@ -13,6 +13,10 @@ struct dist *create_pois(double *lambda)
 	struct dist *pois = malloc(sizeof(struct dist));
 	pois->param = lambda;
 	pois->dist_type = "poisson";
+	
+	pois->seginfo.m = 0;
+	pois->seginfo.nth = 0;
+
 	pois->add_segment = add_segment_pois;
 
 	return pois;
@@ -30,8 +34,6 @@ void add_segment_pois(double *distri_value, void *param,
 	else
 		distri_value[nth] = distri_value[nth - 1] + 
 			exp_value(nth, *lambda);
-	seginfo->m = distri_value[nth];
-	++seginfo->nth;
 }
 
 static double exp_value(int i, double lambda)

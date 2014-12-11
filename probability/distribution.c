@@ -23,7 +23,8 @@ static int binsearch(double *a, double val, int n)
 	return start;
 }
 
-void add_segment(double **distri_value, struct dist *dist, double randnum)
+static void divide_segment(double **distri_value, 
+                	struct dist *dist, double randnum)
 {
 	struct seginfo *seginfo = &dist->seginfo;
 	
@@ -33,6 +34,8 @@ void add_segment(double **distri_value, struct dist *dist, double randnum)
 		dist->add_segment(*distri_value, dist->param, seginfo);
 		printf("randnum = %lf, seginfo.m = %lf, seginfo.nth = %d\n", 
 		       randnum, seginfo->m, seginfo->nth);
+		seginfo->m = (*distri_value)[seginfo->nth];
+		++seginfo->nth;
 	}
 }
 
@@ -49,7 +52,7 @@ void gener_distri(int *distri, int N, struct dist *dist)
 		randnum = rand() / (double)RAND_MAX;
 
 		if (randnum > seginfo->m) { 
-			add_segment(&distri_value, dist, randnum);
+			divide_segment(&distri_value, dist, randnum);
 		}
 		val = binsearch(distri_value, randnum, seginfo->nth);
 		//printf("\nrandnum = %lf, val = %d, nth = %d, m = %lf\n", randnum, val, seginfo->nth, seginfo->m);

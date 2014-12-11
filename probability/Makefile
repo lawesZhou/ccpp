@@ -1,4 +1,4 @@
-CFLAGS	= -Wall
+CFLAGS	= -Wall -g
 LDLIBS	= -lm
 CXXFLAGS = $(CFLAGS)
 

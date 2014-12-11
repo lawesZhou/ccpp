@@ -4,7 +4,7 @@
 #include "distribution.h"
 #include "print.h"
 
-static int binsearch(double *a, double val, int n)
+static int binsearch(const double *a, double val, int n)
 {
 	int start = 0;
 	int last = n;
@@ -42,15 +42,16 @@ static void divide_segment(double **distri_value,
 void gener_distri(int *distri, int N, struct dist *dist)
 {
 	int i;
-	double randnum;
-	int val = 0;
 	struct seginfo *seginfo = &dist->seginfo;
-	seginfo->m = 0;
+	seginfo->m = 0.0;
 	seginfo->nth = 0;
 
 	double *distri_value = NULL;
 
 	for (i = 0; i < N; ++i) {
+		int val = 0;
+		double randnum;
+
 		randnum = rand() / (double)RAND_MAX;
 
 		if (randnum > seginfo->m) { 

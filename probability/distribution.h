@@ -21,5 +21,8 @@ struct dist {
 };
 
 void gener_distri(int *distri, int N, struct dist *dist);
+
+void free_dist(struct dist *dist);
+
 #endif
 

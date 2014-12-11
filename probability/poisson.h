@@ -3,9 +3,6 @@
 
 #include "distribution.h"
 
-struct dist *create_pois(double *lambda);
-
-void add_segment_pois(double *distri_value, void *param,
-		      struct seginfo *seginfo);
+struct dist *create_pois(double lambda);
 
 #endif

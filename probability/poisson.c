@@ -6,23 +6,18 @@
 #include "poisson.h"
 #include "distribution.h"
 
-static double exp_value(int i, double lambda);
-
-struct dist *create_pois(double *lambda)
+static double exp_value(int i, double lambda)
 {
-	struct dist *pois = malloc(sizeof(struct dist));
-	pois->param = lambda;
-	pois->dist_type = "poisson";
-	
-	pois->seginfo.m = 0;
-	pois->seginfo.nth = 0;
+	double pnum = 1.0;
+	int j = 0;
 
-	pois->add_segment = add_segment_pois;
+	for (j = 1; j <= i; ++j) 
+		pnum *= lambda / (double)j;
 
-	return pois;
+	return pnum / exp(lambda);
 }
 
-void add_segment_pois(double *distri_value, void *param,
+static void add_segment_pois(double *distri_value, void *param,
 		      struct seginfo *seginfo)
 {
 	double *lambda = (double *)param;
@@ -36,38 +31,17 @@ void add_segment_pois(double *distri_value, void *param,
 			exp_value(nth, *lambda);
 }
 
-static double exp_value(int i, double lambda)
+
+struct dist *create_pois(double lambda)
 {
-	double pnum = 1.0;
-	int j = 0;
+	struct dist *pois = malloc(sizeof(struct dist));
+	double *args = malloc(sizeof(double));
+	*args = lambda;
 
-	for (j = 1; j <= i; ++j) 
-		pnum *= lambda / (double)j;
+	pois->param = args;
+	pois->dist_type = "poisson";
+	
+	pois->add_segment = add_segment_pois;
 
-	return pnum / exp(lambda);
+	return pois;
 }
-
-double *pois_value(int *n, void *param)
-{
-	double *lambda = (double *)param;
-
-	int i = 0;
-	double *ppois = malloc(sizeof(double));
-
-	/*
-	   p = e^(-lambda) * lambda ^ i / i!
-	 */
-	for (i = 0; i < *n; ++i) {
-		if (i == 0)
-			ppois[i] = 1 / exp(*lambda);
-		else
-			ppois[i] = ppois[i - 1] + exp_value(*lambda, i);
-
-		if (ppois[i] < 1) {
-			++(*n);
-			ppois = realloc(ppois, (*n) * sizeof(double));
-		}
-	}	
-	return ppois;
-}
-

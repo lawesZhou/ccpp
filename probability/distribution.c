@@ -32,8 +32,8 @@ static void divide_segment(double **distri_value,
 		*distri_value = realloc(*distri_value, 
 				        (seginfo->nth + 1) * sizeof(double));
 		dist->add_segment(*distri_value, dist->param, seginfo);
-		printf("randnum = %lf, seginfo.m = %lf, seginfo.nth = %d\n", 
-		       randnum, seginfo->m, seginfo->nth);
+		//printf("randnum = %lf, seginfo.m = %lf, seginfo.nth = %d\n", 
+		 //      randnum, seginfo->m, seginfo->nth);
 		seginfo->m = (*distri_value)[seginfo->nth];
 		++seginfo->nth;
 	}
@@ -45,6 +45,8 @@ void gener_distri(int *distri, int N, struct dist *dist)
 	double randnum;
 	int val = 0;
 	struct seginfo *seginfo = &dist->seginfo;
+	seginfo->m = 0;
+	seginfo->nth = 0;
 
 	double *distri_value = NULL;
 
@@ -62,4 +64,10 @@ void gener_distri(int *distri, int N, struct dist *dist)
 	printArray(distri_value, seginfo->nth);
 
 	free(distri_value);
+}
+
+void free_dist(struct dist *dist)
+{
+	free(dist->param);
+	free(dist);
 }

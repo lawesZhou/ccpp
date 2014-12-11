@@ -1,9 +1,6 @@
 #ifndef DISTRIBUTION_H
 #define DISTRIBUTION_H
 
-#define setArgs(dist_type, param) \
-	set ## dist_type ## Args(dist_type, param)
-
 struct seginfo {
 	double m;
 	int nth;
@@ -16,8 +13,7 @@ struct dist {
 
 	struct seginfo seginfo;
 
-	void (*add_segment)(double *distri_value, 
-			    void *param, struct seginfo *seginfo);
+	double (*segment_len)(void *param, int nth);
 };
 
 void gener_distri(int *distri, int N, struct dist *dist);

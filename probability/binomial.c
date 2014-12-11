@@ -30,20 +30,14 @@ static double combin_num(int n, int i)
 	return cn;
 }
 
-static void add_segment_bino(double *distri_value, 
-		      void *param, struct seginfo *seginfo)
+static double segment_bino_len(void *param, int nth)
 {
 	struct BinoArgs *args = (struct BinoArgs *)param;
 	int n = args->n;
 	double p = args->p;
-	int nth = seginfo->nth;
 	
 	/* B() = (n,p)*p^i*(1-p)(n-i)*/
-	if (nth == 0)
-		distri_value[nth] = pow((1 - p), n);
-	else
-		distri_value[nth] = distri_value[nth - 1] + combin_num(n, nth)  
-			            * pow(p, nth) * pow((1 - p), n - nth);
+	return combin_num(n, nth) * pow(p, nth) * pow(1 - p, n - nth);
 }
 
 struct dist *create_bino(int n, double p)
@@ -56,7 +50,7 @@ struct dist *create_bino(int n, double p)
 	args->p = p;
 
 	bino->param = args;
-	bino->add_segment = add_segment_bino;
+	bino->segment_len = segment_bino_len;
 
 	return bino;
 }

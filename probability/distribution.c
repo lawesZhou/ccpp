@@ -31,10 +31,10 @@ static void divide_segment(double **distri_value,
 	while (seginfo->m < randnum) {
 		*distri_value = realloc(*distri_value, 
 				        (seginfo->nth + 1) * sizeof(double));
-		dist->add_segment(*distri_value, dist->param, seginfo);
+		seginfo->m += dist->segment_len(dist->param, seginfo->nth);
 		//printf("randnum = %lf, seginfo.m = %lf, seginfo.nth = %d\n", 
 		 //      randnum, seginfo->m, seginfo->nth);
-		seginfo->m = (*distri_value)[seginfo->nth];
+		(*distri_value)[seginfo->nth] = seginfo->m;
 		++seginfo->nth;
 	}
 }

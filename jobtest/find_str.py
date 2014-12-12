@@ -12,4 +12,5 @@ def find_str(n):
 if __name__ == '__main__':
 	n = 25267566250558
 	str_ = find_str(n)
-	print "the string is: ",str_
+	print "\nyour answer of first questiong is: ",
+	print str_

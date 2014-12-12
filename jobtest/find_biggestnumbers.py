@@ -67,6 +67,6 @@ if __name__ == "__main__":
 	numbers_biggest = 100
 
 	arr = find_bignums(N, random_range_max, numbers_biggest)
-	print "your answer is below:"
+	print "\nyour answer of second question is below:"
 	print arr
 

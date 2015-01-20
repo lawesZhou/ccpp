@@ -10,7 +10,7 @@ struct hash_list {
 };
 
 struct hashtable {
-	struct hash_list *slot[100];
+	struct hash_list slot[100];
 };
 
 struct hashtable *create_hashtable()
@@ -21,7 +21,7 @@ struct hashtable *create_hashtable()
 
 	int i;
 	for (i = 0; i < 100; ++i)
-		h->slot[i] = NULL;
+		h->slot[i].next = NULL;
 	return h;
 }
 
@@ -32,11 +32,11 @@ void destory_hashtable(struct hashtable *h)
 
 	int i;
 	for (i = 0; i < 100; ++i) {
-		struct hash_list *l = h->slot[i];
-		while (l) {
-			struct hash_list *node = l;
-			l = l->next;
-			free(node);
+		struct hash_list *node = h->slot[i].next;
+		while (node) {
+			struct hash_list *temp = node;
+			node = node->next;
+			free(temp);
 		}
 	}
 	free(h);
@@ -52,12 +52,12 @@ static int hash_fun(const key_t key, int size)
 	return sum % size;
 }
 
-static int has_key(struct hash_list *l, const key_t key)
+static int has_key(struct hash_list *hlist, const key_t key)
 {
-	while (l) {
-		if (l->key == key)
+	while (hlist) {
+		if (hlist->key == key)
 			return 0;
-		l = l->next;
+		hlist = hlist->next;
 	}
 	return 1;
 }
@@ -71,11 +71,11 @@ int insert_hashtable(struct hashtable *h, const key_t key, value_t value)
 	//find the slot number;
 	int slot_no = hash_fun(key, 100);
 
-	if (has_key(h->slot[slot_no], key)) {
+	if (has_key(h->slot[slot_no].next, key)) {
 		node->key = key;
 		node->value = value;
-		node->next = h->slot[slot_no];
-		h->slot[slot_no] = node;	
+		node->next = h->slot[slot_no].next;
+		h->slot[slot_no].next = node;	
 	}
 //	printf("&slot = %p\n", slot);
 //	printf("&hslot = %p\n", h->slot[slot_no]);
@@ -90,19 +90,10 @@ void delete_hashtable(struct hashtable *h, const key_t key)
 
 	int slot_no = hash_fun(key, 100);
 
-	struct hash_list *node = h->slot[slot_no]; 
-	printf("&hslot = %p %p\n",h->slot[slot_no], node);
-	printf("&hslot = %s\n",h->slot[slot_no]->key);
-	if (node->key == key) {
-		printf("&hslot = %p %p\n",h->slot[slot_no], node);
-		struct hash_list *keynode = node;
-		h->slot[slot_no] = keynode->next;
-		free(keynode);
-		return;
-	}
+	struct hash_list *node = &h->slot[slot_no]; 
 
 	while (node) {
-		if (node->next->key == key) {
+		if (node->next && node->next->key == key) {
 			struct hash_list *keynode = node->next;
 			node->next = node->next->next;
 			free(keynode);
@@ -136,9 +127,9 @@ int find_hashtable(struct hashtable *h, const key_t key, value_t *value)
 		return -1;
 
 	int slot_no = hash_fun(key, 100);
-	struct hash_list *slot = h->slot[slot_no];
+	struct hash_list *slot = h->slot[slot_no].next;
 
-	while(slot) {
+	while (slot) {
 		if (slot->key == key) {
 			if (value)
 				*value = slot->value;
@@ -155,11 +146,11 @@ void traverse_hashtable(struct hashtable *h)
 	if (h == NULL)
 		return;
 	int i;
-	for(i = 0; i < 100; ++i) {
-		struct hash_list *l = h->slot[i];
-		while(l) {
-			printf("%s, %d\n", l->key, l->value);
-			l = l->next;
+	for (i = 0; i < 100; ++i) {
+		struct hash_list *node = h->slot[i].next;
+		while (node) {
+			printf("%s, %d\n", node->key, node->value);
+			node = node->next;
 		}
 	}
 }

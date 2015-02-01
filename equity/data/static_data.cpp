@@ -45,41 +45,38 @@ file_data::~file_data()
 
 bool file_data::getnextdata()
 {
-	cout << "read begin" << endl;
 	if (fscanf(fp, "%lf", &lastprice) != 1) {
-		cout << "read failed" << endl;
 		return false;
 	}
 
-	cout << "read ok" << endl;
 	++x;
 	return true;
 }
 
 mysql_data::mysql_data()
 {
-	mysql_init(mysql);
-       	if (!mysql_real_connect(mysql, "localhost", "laosi", "123456", 
+	mysql_init(&mysql);
+       	if (!mysql_real_connect(&mysql, "localhost", "laosi", "123456", 
 			        "Futures", 0, NULL, 0)) {
 		perror("failed to open database ");
 		exit(-1);
 	}
 
 	const char *query = "select * from test";
-	if(mysql_query(mysql, query)) {
+	if(mysql_query(&mysql, query)) {
 		cerr << "the query statement execute failed "
 		       << query << endl;
 		exit(-1);
 	}
 
-	query_res = mysql_store_result(mysql);
+	query_res = mysql_store_result(&mysql);
 }
 
 mysql_data::~mysql_data()
 {
 	//check the database connection
-	if (!mysql_ping(mysql)) {
-		mysql_close(mysql);
+	if (!mysql_ping(&mysql)) {
+		mysql_close(&mysql);
 	}
 }
 

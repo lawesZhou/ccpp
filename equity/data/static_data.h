@@ -67,7 +67,7 @@ public:
 	virtual ~mysql_data();
 	virtual bool getnextdata();
 private:
-	MYSQL *mysql;
+	MYSQL mysql;
 	MYSQL_RES *query_res;
 };
 

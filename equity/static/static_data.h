@@ -10,12 +10,10 @@ struct point {
 
 class StaticData {
 public:
-	MyPainterWidget *pw;
-
-	StaticData(){};
+	StaticData();
 	virtual ~StaticData(){};
 	virtual bool getnextdata(){return 1;};
-	void print();
+	void print(MyPainterWidget *pw);
 	struct point getpointValue();
 protected:
 	double lastprice;

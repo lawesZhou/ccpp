@@ -5,8 +5,13 @@
 
 std::vector<struct point> pointSet;
 
+
+StaticData::StaticData()
+{
+}
+
 void
-StaticData::print()
+StaticData::print(MyPainterWidget *pw)
 {
 	while (getnextdata()) {
 		struct point p = getpointValue();

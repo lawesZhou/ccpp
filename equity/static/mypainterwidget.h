@@ -15,8 +15,9 @@ public:
 
 	//继承
 	void paintEvent(QPaintEvent* p);
-private:
+
 	StaticData *data;
+
 };
 
 #endif // MYPAINTERWIDGET_H

@@ -16,9 +16,10 @@ extern std::vector<struct point> pointSet;
 
 static void *thread_init(void *args)
 {
-	StaticData *data = (StaticData *)args;
+	MyPainterWidget *pw = (MyPainterWidget *)args;
+	StaticData *data = pw->data;
 	sleep(1);
-	data->print();
+	data->print(pw);
 	pause();
 	return NULL;
 }
@@ -30,7 +31,7 @@ MyPainterWidget::MyPainterWidget()
 MyPainterWidget::MyPainterWidget(StaticData *static_data) : data(static_data)
 {
 	pthread_t pth;
-        pthread_create(&pth, NULL, thread_init, data);
+        pthread_create(&pth, NULL, thread_init, this);
 }
 
 MyPainterWidget::~MyPainterWidget()
